@@ -1,0 +1,94 @@
+﻿[package]
+name = "wikipedia_rt_monitor"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# HTTP client for Wikipedia SSE stream
+reqwest = { version = "0.12", features = ["rustls-tls", "stream"] }
+
+# HTTP server for React dashboard API
+axum = "0.7"
+tower-http = { version = "0.5", features = ["cors"] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Zero-copy byte buffers
+bytes = "1"
+
+# Bounded concurrent channels
+crossbeam-channel = "0.5"
+
+# Lazy statics (async logger channel)
+once_cell = "1"
+
+# Async stream utilities (SSE reading)
+futures-util = "0.3"
+tokio-util = { version = "0.7", features = ["io"] }
+
+# Error handling
+anyhow = "1"
+
+[dev-dependencies]
+# Criterion benchmark framework (Extra 2)
+criterion = { version = "0.5", features = ["html_reports"] }
+
+# Tokio runtime needed by async pipeline workers inside benchmarks and tests
+tokio = { version = "1", features = ["full"] }
+
+# bytes needed in integration tests (constructing RawPacket)
+bytes = "1"
+
+# ============================================================================
+# Integration test targets (files in tests/)
+# ============================================================================
+
+[[test]]
+name = "test_pipeline"
+path = "tests/test_pipeline.rs"
+
+[[test]]
+name = "test_priority"
+path = "tests/test_priority.rs"
+
+[[test]]
+name = "test_scheduling"
+path = "tests/test_scheduling.rs"
+
+[[test]]
+name = "test_watchdog"
+path = "tests/test_watchdog.rs"
+
+# ============================================================================
+# Criterion benchmark target (file in benches/)
+# ============================================================================
+
+[[bench]]
+name = "comparison"
+path = "benches/comparison.rs"
+harness = false
+
+# ============================================================================
+# Build profiles
+# ============================================================================
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+
+[profile.bench]
+# Benchmark under release-equivalent optimisations so numbers reflect
+# real-world performance, not debug-mode overhead.
+opt-level = 3
+debug = false
+
+[profile.test]
+# Keep debug info in test builds so backtraces are readable.
+opt-level = 1
+debug = true
