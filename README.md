@@ -153,4 +153,4 @@ docs/            report and figures
 
 ## Author
 
-<YOUR NAME> - <email / LinkedIn>
+Oumalkaire Aboubakar  - <oumaabou17@gmail.com/ www.linkedin.com/in/oumalkaire-aboubaker>
